@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp(){
-    // hello2
+    // hello3
 }
 
 @Preview(showBackground = true)
