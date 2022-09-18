@@ -17,27 +17,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppSupTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
+
+                MainApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun MainApp(){
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     AppSupTheme {
-        Greeting("Android")
+        MainApp()
     }
 }
