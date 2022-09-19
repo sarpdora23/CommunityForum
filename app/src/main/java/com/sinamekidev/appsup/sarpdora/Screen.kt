@@ -38,7 +38,10 @@ fun HomeScreen(){
         mutableStateOf("Home")
     }
     var navMenuVisibity = remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
+    }
+    var navMenuIndex = remember {
+        mutableStateOf(0)
     }
     Box() {
         Scaffold(bottomBar = {HomeBottomNavigatonBar{
@@ -80,14 +83,31 @@ fun HomeScreen(){
                     .fillMaxHeight()
                     .fillMaxWidth(0.7f)) {
                     NavigationMenu {
-                        MenuRow(icon = R.drawable.home, text = "Home") {
-
+                        MenuRow(icon = R.drawable.home, text = "Home", isSelected = navMenuIndex.value == 0) {
+                            navMenuIndex.value = 0
                         }
-                        MenuRow(icon = R.drawable.home, text = "Home") {
-
+                        MenuRow(icon = R.drawable.discussion, text = "Forum",isSelected = navMenuIndex.value == 1) {
+                            navMenuIndex.value = 1
                         }
-                        MenuRow(icon = R.drawable.home, text = "Home") {
-
+                        MenuRow(icon = R.drawable.mortarboard, text = "Course",isSelected = navMenuIndex.value == 2) {
+                            navMenuIndex.value = 2
+                        }
+                        MenuRow(icon = R.drawable.ranking, text = "Ranking",isSelected = navMenuIndex.value == 3) {
+                            navMenuIndex.value = 3
+                        }
+                        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom){
+                            Surface(modifier = Modifier.fillMaxWidth(), color = SecondBg) {
+                                Row(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(60.dp),
+                                    verticalAlignment = Alignment.CenterVertically) {
+                                    Spacer(modifier = Modifier.width(60.dp))
+                                    Text(text = "Sign Out", color = MainBg, fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                                    Spacer(modifier = Modifier.width(15.dp))
+                                    Icon(painter = painterResource(id = R.drawable.logout)
+                                        , contentDescription ="Log out", tint = MainBg, modifier = Modifier.size(30.dp))
+                                }
+                            }
                         }
                     }
                 }
@@ -185,7 +205,7 @@ fun MenuRow(icon:Int,text:String,isSelected:Boolean = false,onClick: () -> Unit)
         verticalAlignment = Alignment.CenterVertically) {
         Card(modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp), backgroundColor = rowColor.value) {
+            .height(60.dp).clickable { onClick.invoke() }, backgroundColor = rowColor.value) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
