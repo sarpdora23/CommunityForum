@@ -27,6 +27,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.sinamekidev.appsup.R
 
 @Composable
@@ -43,6 +48,7 @@ fun HomeScreen(){
     var navMenuIndex = remember {
         mutableStateOf(0)
     }
+    var navController = rememberNavController()
     Box() {
         Scaffold(bottomBar = {HomeBottomNavigatonBar{
             HomeBottomNavBarButton(indexNo = 0, selectedInd = homeBottomBarSelectedIndex,
@@ -50,18 +56,21 @@ fun HomeScreen(){
                     .fillMaxWidth(0.3f)
                     .clickable {
                         homeBottomBarSelectedIndex.value = 0
+                        navController.navigate("Profile")
                     })
             HomeBottomNavBarButton(indexNo = 1, selectedInd = homeBottomBarSelectedIndex,
                 icon = R.drawable.home , text = "Home", modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .clickable {
                         homeBottomBarSelectedIndex.value = 1
+                        navController.navigate("Home")
                     })
             HomeBottomNavBarButton(indexNo = 2, selectedInd = homeBottomBarSelectedIndex,
                 icon = R.drawable.setting , text = "Settings", modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
                         homeBottomBarSelectedIndex.value = 2
+                        navController.navigate("Settings")
                     })
         }}, topBar = { HomeTopNavBar(title = homeTopBarTitle.value,
             navMenuVisibility = navMenuVisibity)}) {
@@ -70,7 +79,8 @@ fun HomeScreen(){
                     Column(modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()) {
-
+                        
+                        MainNavigation(navController = navController)
                     }
                 }
             }
@@ -205,7 +215,8 @@ fun MenuRow(icon:Int,text:String,isSelected:Boolean = false,onClick: () -> Unit)
         verticalAlignment = Alignment.CenterVertically) {
         Card(modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp).clickable { onClick.invoke() }, backgroundColor = rowColor.value) {
+            .height(60.dp)
+            .clickable { onClick.invoke() }, backgroundColor = rowColor.value) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
@@ -221,5 +232,56 @@ fun MenuRow(icon:Int,text:String,isSelected:Boolean = false,onClick: () -> Unit)
 @Composable
 fun ScreenPreview(){
     HomeScreen()
+}
+
+@Composable
+fun MainNavigation(navController: NavHostController){
+    NavHost(navController = navController, startDestination = "Home"){
+        composable("Home"){
+            HomeNavigation()
+        }
+        composable("Profile"){
+            ProfileNavigation()
+        }
+        composable("Settings"){
+            SettingsNavigation()
+        }
+    }
+}
+@Composable
+fun HomeNavigation(){
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Home Navigation Screen", color = Color.White)
+        }
+    }
+}
+@Composable
+fun ProfileNavigation(){
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Profile Navigation Screen", color = Color.White)
+        }
+    }
+}
+@Composable
+fun SettingsNavigation(){
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Settings Navigation Screen", color = Color.White)
+        }
+    }
 }
 
