@@ -8,8 +8,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -19,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -33,6 +38,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sinamekidev.appsup.R
+import com.sinamekidev.appsup.data.DummyDataSource
 
 @Composable
 fun HomeScreen(){
@@ -148,7 +154,7 @@ fun HomeBottomNavigatonBar(content:@Composable () -> Unit){
 }
 @Composable
 fun HomeTopNavBar(modifier: Modifier = Modifier,title:String,navMenuVisibility:MutableState<Boolean>){
-    TopAppBar(modifier = modifier, elevation = 25.dp, backgroundColor = MenuBg) {
+    TopAppBar(modifier = modifier, elevation = 25.dp, backgroundColor = MainBg) {
         Row(modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically) {
             Icon(imageVector =Icons.Default.Menu , contentDescription ="Menu", tint = FontColor,
@@ -248,6 +254,7 @@ fun MainNavigation(navController: NavHostController){
         }
     }
 }
+
 @Composable
 fun HomeNavigation(){
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
@@ -257,6 +264,21 @@ fun HomeNavigation(){
             verticalArrangement = Arrangement.Center
         ) {
             Text(text = "Home Navigation Screen", color = Color.White)
+            LazyColumn(){
+                var posts = DummyDataSource.homePostList
+                items(posts){
+
+                }
+            }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(vertical = 100.dp, horizontal = 40.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom) {
+                SharePostButton()
+            }
         }
     }
 }
@@ -284,4 +306,55 @@ fun SettingsNavigation(){
         }
     }
 }
+@Composable
+fun SharePostButton(onCick:() -> Unit = {}){
+    FloatingActionButton(onClick = { onCick.invoke() },
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 15.dp),
+        backgroundColor = MainBg) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "Icon", tint = Color.White)
+    }
+}
 
+@Preview
+@Composable
+fun HomePostLayout(){
+    var imageOk = true
+    var textOk = true
+    Surface(modifier = Modifier
+        .fillMaxWidth(), color = Color.Transparent) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)) {
+            Row() {
+                Image(painter = painterResource(id = R.drawable.profile), contentDescription ="", modifier = Modifier.clip(
+                    CircleShape))
+                Spacer(modifier = Modifier.width(20.dp))
+                Column() {
+                    Text(text = "Name", color = FontColor, fontWeight = FontWeight.SemiBold, fontSize = 22.sp)
+                    Text(text = "Title", color = Color(0xE8B6B6B6), fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            if(textOk){
+                Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris elementum interdum vestibulum. Nulla facilisi. Mauris tristique metus vitae mattis dictum. Vestibulum aliquet lobortis ipsum a imperdiet. Sed sit amet tortor in ligula congue pretium. ",
+                    color = FontColor, fontSize = 20.sp)
+            }
+            if(imageOk){
+                Spacer(modifier = Modifier.height(8.dp))
+                Image(painter = painterResource(id = R.drawable.defaultpost), contentDescription = "Post",
+                    contentScale = ContentScale.FillWidth)
+            }
+            Divider()
+        }
+    }
+
+}
+@Preview
+@Composable
+fun LikeShareCommentSection(){
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Column() {
+
+        }
+    }
+}
