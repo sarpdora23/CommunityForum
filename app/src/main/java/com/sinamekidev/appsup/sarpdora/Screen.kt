@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -39,6 +40,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sinamekidev.appsup.R
 import com.sinamekidev.appsup.data.DummyDataSource
+import com.sinamekidev.appsup.models.Posts
 
 @Composable
 fun HomeScreen(){
@@ -56,40 +58,48 @@ fun HomeScreen(){
     }
     var navController = rememberNavController()
     Box() {
-        Scaffold(bottomBar = {HomeBottomNavigatonBar{
-            HomeBottomNavBarButton(indexNo = 0, selectedInd = homeBottomBarSelectedIndex,
-                icon = R.drawable.user , text = "Profile", modifier = Modifier
-                    .fillMaxWidth(0.3f)
-                    .clickable {
-                        homeBottomBarSelectedIndex.value = 0
-                        navController.navigate("Profile")
-                    })
-            HomeBottomNavBarButton(indexNo = 1, selectedInd = homeBottomBarSelectedIndex,
-                icon = R.drawable.home , text = "Home", modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .clickable {
-                        homeBottomBarSelectedIndex.value = 1
-                        navController.navigate("Home")
-                    })
-            HomeBottomNavBarButton(indexNo = 2, selectedInd = homeBottomBarSelectedIndex,
-                icon = R.drawable.setting , text = "Settings", modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        homeBottomBarSelectedIndex.value = 2
-                        navController.navigate("Settings")
-                    })
-        }}, topBar = { HomeTopNavBar(title = homeTopBarTitle.value,
-            navMenuVisibility = navMenuVisibity)}) {
-            Surface(modifier = Modifier.fillMaxSize(), color = SecondBg) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()) {
-                        
-                        MainNavigation(navController = navController)
-                    }
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.07f)) {
+                HomeTopNavBar(title = homeTopBarTitle.value,
+                    navMenuVisibility = navMenuVisibity, modifier = Modifier.fillMaxSize())
+            }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.93f)) {
+                Surface(modifier = Modifier.fillMaxSize(), color = SecondBg) {
+                    MainNavigation(navController = navController)
                 }
             }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(), verticalAlignment = Alignment.Bottom) {
+                HomeBottomNavigatonBar(modifier = Modifier.fillMaxSize()){
+                    HomeBottomNavBarButton(indexNo = 0, selectedInd = homeBottomBarSelectedIndex,
+                        icon = R.drawable.user , text = "Profile", modifier = Modifier
+                            .fillMaxWidth(0.3f)
+                            .clickable {
+                                homeBottomBarSelectedIndex.value = 0
+                                navController.navigate("Profile")
+                            })
+                    HomeBottomNavBarButton(indexNo = 1, selectedInd = homeBottomBarSelectedIndex,
+                        icon = R.drawable.home , text = "Home", modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .clickable {
+                                homeBottomBarSelectedIndex.value = 1
+                                navController.navigate("Home")
+                            })
+                    HomeBottomNavBarButton(indexNo = 2, selectedInd = homeBottomBarSelectedIndex,
+                        icon = R.drawable.setting , text = "Settings", modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                homeBottomBarSelectedIndex.value = 2
+                                navController.navigate("Settings")
+                            })
+                }
+            }
+
         }
         AnimatedVisibility(visible =navMenuVisibity.value) {
             Row(modifier = Modifier
@@ -145,8 +155,8 @@ fun HomeScreen(){
 
 }
 @Composable
-fun HomeBottomNavigatonBar(content:@Composable () -> Unit){
-    BottomAppBar(backgroundColor = MainBg, elevation = 25.dp) {
+fun HomeBottomNavigatonBar(modifier: Modifier,content:@Composable () -> Unit){
+    BottomAppBar(modifier=modifier,backgroundColor = MainBg, elevation = 25.dp) {
         Row(modifier = Modifier.fillMaxSize()) {
             content()
         }
@@ -259,25 +269,19 @@ fun MainNavigation(navController: NavHostController){
 fun HomeNavigation(){
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Home Navigation Screen", color = Color.White)
             LazyColumn(){
-                var posts = DummyDataSource.homePostList
+                var posts = DummyDataSource.getPosts()
                 items(posts){
-
+                    HomePostLayout(it)
+                    LikeShareCommentSection()
+                    Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = MainBg)
                 }
-            }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(vertical = 100.dp, horizontal = 40.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.Bottom) {
-                SharePostButton()
             }
         }
     }
@@ -315,46 +319,82 @@ fun SharePostButton(onCick:() -> Unit = {}){
     }
 }
 
-@Preview
 @Composable
-fun HomePostLayout(){
-    var imageOk = true
-    var textOk = true
+fun HomePostLayout(post:Posts){
+    var imageOk = post.imageId != null
+    var textOk = post.text != null
     Surface(modifier = Modifier
         .fillMaxWidth(), color = Color.Transparent) {
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)) {
             Row() {
-                Image(painter = painterResource(id = R.drawable.profile), contentDescription ="", modifier = Modifier.clip(
-                    CircleShape))
+                Image(painter = painterResource(id = R.drawable.profile), contentDescription ="", modifier = Modifier
+                    .clip(
+                        CircleShape
+                    )
+                    .size(52.dp))
                 Spacer(modifier = Modifier.width(20.dp))
                 Column() {
-                    Text(text = "Name", color = FontColor, fontWeight = FontWeight.SemiBold, fontSize = 22.sp)
-                    Text(text = "Title", color = Color(0xE8B6B6B6), fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                    Text(text = post.user.name, color = FontColor, fontWeight = FontWeight.SemiBold, fontSize = 22.sp)
+                    Text(text = post.user.bio, color = Color(0xE8B6B6B6), fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
             if(textOk){
-                Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris elementum interdum vestibulum. Nulla facilisi. Mauris tristique metus vitae mattis dictum. Vestibulum aliquet lobortis ipsum a imperdiet. Sed sit amet tortor in ligula congue pretium. ",
-                    color = FontColor, fontSize = 20.sp)
+                post.text?.let {
+                    Text(text = it,
+                        color = FontColor, fontSize = 20.sp)
+                }
             }
             if(imageOk){
                 Spacer(modifier = Modifier.height(8.dp))
-                Image(painter = painterResource(id = R.drawable.defaultpost), contentDescription = "Post",
+                Image(painter = painterResource(id = post.imageId!!), contentDescription = "Post",
                     contentScale = ContentScale.FillWidth)
             }
-            Divider()
+
         }
     }
 
 }
-@Preview
 @Composable
 fun LikeShareCommentSection(){
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Column() {
-
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(9.dp)) {
+        Row(modifier = Modifier
+            .fillMaxWidth(0.3f)
+            .clickable {
+                LikeButtonFun()
+            }) {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Image(painter = painterResource(id = R.drawable.like), contentDescription ="Like",
+                    modifier = Modifier.size(18.dp), colorFilter = ColorFilter.tint(MainBg))
+                Text(text = "Like", fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = MainBg)
+            }
+        }
+        Row(modifier = Modifier
+            .fillMaxWidth(0.5f)
+            .clickable {
+                CommentButtonFun()
+            }) {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Image(painter = painterResource(id = R.drawable.comment), contentDescription ="Comment",
+                    modifier = Modifier.size(18.dp), colorFilter = ColorFilter.tint(MainBg))
+                Text(text = "Comment", fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = MainBg)
+            }
+        }
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                ShareButtonFun()
+            }) {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Image(painter = painterResource(id = R.drawable.share), contentDescription ="Share",
+                    modifier = Modifier.size(18.dp), colorFilter = ColorFilter.tint(MainBg))
+                Text(text = "Share", fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = MainBg)
+            }
         }
     }
 }
+
