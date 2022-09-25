@@ -106,7 +106,7 @@ fun LoginScreen(){
                     .padding(top = 30.dp)
                     .fillMaxSize(), horizontalAlignment = Alignment.End) {
                     Text(text = "Don't Have an Account?",color = Color(0xFFd92643),fontWeight = FontWeight.Bold, fontSize = 18.sp)
-
+                    //yorum
 
                 }
 
