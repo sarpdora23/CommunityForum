@@ -30,10 +30,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.huawei.hms.support.account.AccountAuthManager
-import com.huawei.hms.support.account.request.AccountAuthParams
-import com.huawei.hms.support.account.request.AccountAuthParamsHelper
-import com.huawei.hms.support.account.service.AccountAuthService
 import com.sinamekidev.appsup.R
 
 //Login Screen

@@ -264,7 +264,7 @@ fun MainNavigation(navController: NavHostController){
         }
     }
 }
-
+@Preview
 @Composable
 fun HomeNavigation(){
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Transparent) {
@@ -275,12 +275,18 @@ fun HomeNavigation(){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            LazyColumn(){
-                var posts = DummyDataSource.getPosts()
-                items(posts){
-                    HomePostLayout(it)
-                    LikeShareCommentSection()
-                    Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = MainBg)
+            Box {
+                LazyColumn(){
+                    var posts = DummyDataSource.getPosts()
+                    items(posts){
+                        HomePostLayout(it)
+                        LikeShareCommentSection()
+                        Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = MainBg)
+                    }
+                }
+                Row(modifier = Modifier.fillMaxSize().padding(48.dp),
+                    horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom){
+                    SharePostButton()
                 }
             }
         }
@@ -347,6 +353,7 @@ fun HomePostLayout(post:Posts){
                         color = FontColor, fontSize = 20.sp)
                 }
             }
+
             if(imageOk){
                 Spacer(modifier = Modifier.height(8.dp))
                 Image(painter = painterResource(id = post.imageId!!), contentDescription = "Post",
@@ -384,6 +391,7 @@ fun LikeShareCommentSection(){
                 Text(text = "Comment", fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = MainBg)
             }
         }
+
         Row(modifier = Modifier
             .fillMaxWidth()
             .clickable {
