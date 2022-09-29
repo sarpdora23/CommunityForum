@@ -17,6 +17,11 @@
         android:theme="@style/Theme.AppSup"
         tools:targetApi="31">
         <activity
+            android:name=".ForumActivity"
+            android:exported="false"
+            android:label="@string/title_activity_forum"
+            android:theme="@style/Theme.AppSup" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

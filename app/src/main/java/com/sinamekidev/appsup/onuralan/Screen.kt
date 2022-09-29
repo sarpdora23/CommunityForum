@@ -125,7 +125,7 @@ fun LoginScreen(){
 @Preview(showSystemUi = true)
 @Composable
 fun LoginScreenTest (){
-    LoginScreen()
+    RegisterScreen()
 }
 @Composable
 fun SignInCard(){
