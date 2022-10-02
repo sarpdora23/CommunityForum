@@ -1,6 +1,7 @@
 package com.sinamekidev.appsup.onuralan
 
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -273,7 +274,9 @@ fun RegisterScreen(){
             Button(modifier = Modifier
                 .padding(top = 30.dp, start = 30.dp, end = 30.dp)
                 .fillMaxWidth()
-                .height(40.dp), onClick = {
+                .height(40.dp),
+                onClick = {
+
 
             },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Cyan))
